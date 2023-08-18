@@ -1,0 +1,108 @@
+﻿@model BitesProjectMvc.Models.CodeFile
+
+@{
+    ViewBag.Title = "CodeLines";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .row {
+            display: flex;
+        }
+
+        .column {
+            height: 100vh;
+            flex: 1;
+            overflow: auto;
+        }
+
+        #column-1 {
+            background-color: #fdfae9;
+            flex: 1
+        }
+
+        #column-2 {
+            background-color: #f3f3d1;
+            flex: 1
+        }
+
+        #column-3 {
+            background-color: #f5f5bc;
+            flex: 1
+        }
+    </style>
+</head>
+<body>
+    <div class="row">
+        <div class="column" id="column-1">
+            <div>
+                @Html.Partial("_CodeLinesView", Model)
+            </div>
+        </div>
+        <div class="column" id="column-2">
+            @Html.Action("RulePage", "Rule")
+        </div>
+        <div class="column" id="column-3">
+            <div id="summaryContainer">
+                @Html.Action("SelectedRules",Model) 
+            </div>
+
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $("button.RuleButton").on("click", function () {
+                $(this).toggleClass("active");
+
+                var selectedRuleIds = [];
+                $("button.RuleButton.active").each(function () {
+                    selectedRuleIds.push($(this).data("ruleid"));
+                });
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Home/ToggleRule",
+                    data: { ruleId: $(this).data("ruleid") },
+                    success: function (data) {
+                        $("#column-1").html(data);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("Error: " + error);
+                    }
+                });
+            });
+
+            $("#showSummaryButton").on("click", function () {
+                var selectedRuleIds = [];
+                $("button.RuleButton.active").each(function () {
+                    selectedRuleIds.push($(this).data("ruleid"));
+                });
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Home/SelectedRules",
+                    data: { selectedRuleIds: selectedRuleIds },
+                    success: function (data) {
+                        $("#summaryContainer").html(data);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("Error: " + error);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+

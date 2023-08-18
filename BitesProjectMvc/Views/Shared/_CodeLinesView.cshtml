@@ -1,0 +1,9 @@
+﻿@model BitesProjectMvc.Models.CodeFile
+
+<h1 style="color: #512709;text-align:center">CODE</h1>
+
+
+@foreach (var item in Model.Lines)
+{
+    <pre style="padding-left: 10px; color: #68330d; @if (!item.IsValid) { <text>background-color: #ecbb98;</text> }" id="line-@item.ID">@item.ID@item.Code</pre>
+}

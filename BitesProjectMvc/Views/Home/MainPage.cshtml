@@ -1,0 +1,16 @@
+﻿
+@{
+    ViewBag.Title = "MainPage";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>MainPage</h2>
+@{
+    ViewBag.Title = "FILE";
+}
+
+@using (Html.BeginForm("GetFilePath", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <input type="file" name="dosyaSec" id="dosyaSec" />
+    <input type="submit" value="Dosya Yolu Gönder" />
+}

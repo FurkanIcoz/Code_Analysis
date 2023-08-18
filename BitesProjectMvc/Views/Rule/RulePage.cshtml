@@ -1,0 +1,81 @@
+﻿@model List<BitesProjectMvc.Models.Rules>
+
+@{
+    ViewBag.Title = "RulePage";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <style>
+        .container {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .RuleButton {
+            padding: 10px 20px;
+            font-size: 16px;
+            width: 85%;
+            background-color: #d69c9c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
+            display: flex;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+            .RuleButton.active {
+                background-color: #e6adad;
+            }
+
+            .RuleButton:hover {
+                background-color: #e6adad;
+            }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center; color: #512709">RULE</h1>
+    <div class="container">
+        @foreach (var item in Model)
+        {
+            <button class="RuleButton" data-ruleid="@item.RuleID">@item.RuleName</button>
+            <p> </p>
+        }
+    </div>
+    <button id="showSummaryButton" style="margin-top: 20px;">Show Summary</button>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $("#showSummaryButton").on("click", function () {
+                var selectedRuleIds = [];
+                $("button.RuleButton.active").each(function () {
+                    selectedRuleIds.push($(this).data("ruleid"));
+                });
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Home/SelectedRules",
+                    data: { selectedRuleIds: selectedRuleIds },
+                    success: function (data) {
+                        $("#summaryContainer").html(data);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("Error: " + error);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
